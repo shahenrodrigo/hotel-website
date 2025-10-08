@@ -340,9 +340,8 @@ export default function Home() {
         id="home"
         className="
     relative min-h-[86vh]
-    -mt-[var(--nav-h)] pt-[var(--nav-h)]   
-    sm:mt-0 sm:pt-0                        /* normal flow on ≥640px */
-    -mb-px                                 /* hide the navbar's 1px border seam */
+    pt-[calc(var(--nav-h)+1px)]  /* start image just below navbar + its 1px border */
+    md:pt-0                      /* normal flow from 768px up */
     overflow-hidden
   "
       >

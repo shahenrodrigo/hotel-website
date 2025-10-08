@@ -26,10 +26,8 @@
 
 :root { --nav-h: 64px; }
 @media (min-width: 768px) { :root { --nav-h: 96px; } }
-
 html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); }
-html, body, #root { min-height: 100%; max-width: 100vw; }
-body { overflow-x: hidden; }
+
 
 /* helpers */
 @layer utilities {
