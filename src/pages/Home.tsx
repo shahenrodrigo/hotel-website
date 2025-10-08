@@ -336,7 +336,16 @@ export default function Home() {
       </Helmet>
 
       {/* HERO */}
-      <section id="home" className="relative min-h-[86vh] overflow-hidden">
+      <section
+        id="home"
+        className="
+    relative min-h-[86vh]
+    -mt-[var(--nav-h)] pt-[var(--nav-h)]   
+    sm:mt-0 sm:pt-0                        /* normal flow on ≥640px */
+    -mb-px                                 /* hide the navbar's 1px border seam */
+    overflow-hidden
+  "
+      >
         <div className="absolute inset-0">
           {slides.map((s, idx) => (
             <SafeImg
