@@ -34,10 +34,31 @@ export default function Navbar() {
       const el = document.getElementById(id);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
     };
-    if (location.pathname !== "/") {
+    if (location.pathname !== "/hotel-website/") {
       navigate(`/#${id}`);
       setTimeout(doScroll, 50);
     } else doScroll();
+  };
+
+  /** ---------- Logo with smart fallback (svg -> png -> jpg) ---------- */
+  const BrandLogo = () => {
+    const sources = [
+
+      "public/brand/galaxy-logo.jpg",
+    ];
+    const [i, setI] = useState(0);
+    const size = scrolled ? "h-8 sm:h-9 lg:h-16" : "h-10 sm:h-11 lg:h-20";
+    return (
+      <img
+        src={sources[i]}
+        onError={() => setI((n) => (n < sources.length - 1 ? n + 1 : n))}
+        alt="The Galaxy Airport Hotel"
+        className={`w-auto ${size} transition-[height] duration-200 select-none`}
+        loading="eager"
+        decoding="async"
+        draggable={false}
+      />
+    );
   };
 
   const RoomsDropdown = () => (
@@ -51,10 +72,26 @@ export default function Navbar() {
       >
         <DropdownMenu.Item asChild>
           <NavLink
-            to="/rooms/deluxe-single"
+            to="/rooms/double-bed-room"
             className="block rounded-lg px-3 py-3 hover:bg-slate-900/5 dark:hover:bg-white/10"
           >
-            Deluxe Single Rooms
+            Double Bed Room
+          </NavLink>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item asChild>
+          <NavLink
+            to="/rooms/triple-bed-room"
+            className="block rounded-lg px-3 py-3 hover:bg-slate-900/5 dark:hover:bg-white/10"
+          >
+            Triple Bed Room
+          </NavLink>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item asChild>
+          <NavLink
+            to="/rooms/family-bed-room"
+            className="block rounded-lg px-3 py-3 hover:bg-slate-900/5 dark:hover:bg-white/10"
+          >
+            Family Bed Room
           </NavLink>
         </DropdownMenu.Item>
       </DropdownMenu.Content>
@@ -109,17 +146,15 @@ export default function Navbar() {
     >
       <div className="mx-auto max-w-7xl h-full px-4 sm:px-6 lg:px-8">
         <div className="flex h-full items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl text-white font-black bg-[var(--brand)]">
-              G
-            </span>
+          <Link to="/hotel-website/" className="flex items-center gap-3">
+            <BrandLogo />
             <span className="text-lg font-extrabold tracking-tight">
-              Galaxy – Airport Residence
+              Galaxy Airport Hotel
             </span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6 text-sm">
-            <NavLink className="link-underline" to="/">
+            <NavLink className="link-underline" to="/hotel-website/">
               Home
             </NavLink>
             <NavLink className="link-underline" to="/about">
@@ -131,7 +166,7 @@ export default function Navbar() {
               Gallery
             </button>
             <button className="link-underline" onClick={() => goTo("location")}>
-              Location & Contact
+              Location &amp; Contact
             </button>
           </nav>
 
@@ -167,7 +202,7 @@ export default function Navbar() {
         ].join(" ")}
       >
         <div className="px-5 py-4 max-h-[calc(100vh-var(--nav-h))] overflow-y-auto text-sm">
-          <NavLink className="block py-2" to="/">
+          <NavLink className="block py-2" to="/hotel-website/">
             Home
           </NavLink>
           <NavLink className="block py-2" to="/about">
@@ -177,8 +212,14 @@ export default function Navbar() {
           <details className="py-2">
             <summary className="cursor-pointer select-none">Rooms</summary>
             <div className="pl-3 pt-2">
-              <NavLink to="/rooms/deluxe-single" className="block py-2">
-                Deluxe Single Rooms
+              <NavLink to="/rooms/double-bed-room" className="block py-2">
+                Double Bed Room
+              </NavLink>
+              <NavLink to="/rooms/triple-bed-room" className="block py-2">
+                Triple Bed Room
+              </NavLink>
+              <NavLink to="/rooms/family-bed-room" className="block py-2">
+                Family Bed Room
               </NavLink>
             </div>
           </details>
@@ -210,7 +251,7 @@ export default function Navbar() {
             className="block py-2 text-left"
             onClick={() => goTo("location")}
           >
-            Location & Contact
+            Location &amp; Contact
           </button>
         </div>
       </div>

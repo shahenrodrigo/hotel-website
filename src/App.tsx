@@ -3,12 +3,12 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import DeluxeSingle from "./pages/rooms/DeluxeSingle";
 import { useEffect } from "react";
 import Lenis from "lenis";
 import Restaurant from "./pages/other/Restaurant";
 import Functions from "./pages/other/Functions";
 import Cafe from "./pages/other/Cafe";
+import RoomPage from "./pages/rooms/RoomPage";
 
 export default function App() {
   // Smooth scrolling
@@ -30,9 +30,11 @@ export default function App() {
       <Navbar />
       <main className="md:pt-20 pt-14 xs:pt-16 lg:pt-20 xl:pt-20">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/hotel-website/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/rooms/deluxe-single" element={<DeluxeSingle />} />
+
+          {/* Rooms */}
+          <Route path="/rooms/:slug" element={<RoomPage />} />
 
           {/* Other Services */}
           <Route path="/other/restaurant" element={<Restaurant />} />

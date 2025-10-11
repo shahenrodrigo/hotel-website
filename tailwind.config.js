@@ -5,7 +5,10 @@ export default {
   theme: {
     extend: {
       screens: { xs: "430px" },
-      fontFamily: { sans: ["Manrope", "ui-sans-serif", "system-ui"] },
+      fontFamily: {
+        sans: ["Manrope", "ui-sans-serif", "system-ui"],
+        brand: ['"Playfair Display"', "serif"],
+      },
     },
   },
   plugins: [],

@@ -10,7 +10,7 @@ import {
   Utensils,
   Gem,
   Coffee,
-  Bed as BedIcon, // safe across lucide versions
+  Bed as BedIcon,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
@@ -33,7 +33,6 @@ const FALLBACK_SVG =
 
 type SafeImgProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   fallbackSrc?: string;
-  /** Fires when the image is ready (load or error→fallback). */
   onReady?: () => void;
 };
 
@@ -92,7 +91,6 @@ const slides = [
   },
 ];
 
-// Updated services
 const services = [
   {
     title: "Restaurant",
@@ -120,20 +118,36 @@ const services = [
   },
 ];
 
+/** ---- Contact details ---- */
+const CONTACT = {
+  mapsShareUrl: "https://maps.app.goo.gl/mLQeQo2E74R4C3iRA?g_st=ipc",
+  email: "thegalaxyairporthotel@gmail.com",
+  phonePretty: "076 880 3740",
+  phoneE164: "+94768803740",
+};
+
+/**
+ * EMBED URL
+ * Use a clean query-based embed to avoid the “Some custom on-map content could not be displayed” banner.
+ * Tip: replace MAP_QUERY with your precise address or venue name for a perfect pin.
+ */
+const MAP_QUERY = "The Galaxy Airport Hotel, Negombo, Sri Lanka";
+const MAPS_EMBED_URL = `https://www.google.com/maps?output=embed&q=${encodeURIComponent(
+  MAP_QUERY
+)}&z=16&hl=en&mapclient=embed`;
+
 /** ---------- Tiny typewriter ---------- **/
 function useTypewriter(text: string, speedMs = 45, key = 0) {
   const [out, setOut] = useState("");
   useEffect(() => {
     let i = 0;
     let t: number | undefined;
-
     const tick = () => {
       setOut(text.slice(0, i));
       i++;
       if (i <= text.length) t = window.setTimeout(tick, speedMs);
     };
     tick();
-
     return () => {
       if (t !== undefined) {
         clearTimeout(t);
@@ -143,6 +157,7 @@ function useTypewriter(text: string, speedMs = 45, key = 0) {
   }, [text, speedMs, key]);
   return out;
 }
+
 function TypingSubtitle({
   text,
   index,
@@ -320,6 +335,9 @@ export default function Home() {
             name: "Galaxy – Airport Residence",
             url: "https://your-domain.lk/",
             address: { "@type": "PostalAddress", addressCountry: "LK" },
+            telephone: CONTACT.phoneE164,
+            email: CONTACT.email,
+            sameAs: [CONTACT.mapsShareUrl],
           })}
         </script>
         <meta property="og:type" content="website" />
@@ -340,8 +358,8 @@ export default function Home() {
         id="home"
         className="
     relative min-h-[86vh]
-    pt-[calc(var(--nav-h)+1px)]  /* start image just below navbar + its 1px border */
-    md:pt-0                      /* normal flow from 768px up */
+    pt-[calc(var(--nav-h)+1px)]
+    md:pt-0
     overflow-hidden
   "
       >
@@ -460,33 +478,76 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid gap-10 lg:grid-cols-2 items-center">
             <Reveal>
-              <div className="mb-10">
-                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                  Galaxy – Airport Residence
+              <div className="mb-8">
+                {/* HEADLINE: richer gold on light, softer/airier gold on dark */}
+                <h2
+                  className="text-3xl sm:text-4xl font-extrabold tracking-tight
+                 text-black dark:text-white"
+                >
+                  Welcome to The Galaxy Airport Hotel
                 </h2>
               </div>
 
-              <p className="mt-4 text-slate-700 dark:text-white/80">
-                Galaxy – Airport Residence is a modern stay near the
-                international airport. Perfect for late arrivals, early flights,
-                and short layovers. Replace this with your real story, mission,
-                and values.
+              <p className="mt-4 text-slate-800 dark:text-white/85">
+                Just 15 minutes from Bandaranaike International Airport (CMB),
+                The Galaxy Airport Hotel is your calm, convenient base for late
+                arrivals, early flights, and quick getaways. Settle into
+                super-comfortable, air-conditioned rooms—then unwind at our cozy
+                café or dine on the finest seafood delights in town.
               </p>
-              <ul className="mt-6 space-y-2 text-slate-700 dark:text-white/80 text-sm">
+
+              {/* HIGHLIGHT PILLS: light solid gold; dark translucent gold */}
+              <div className="mt-5 flex flex-wrap gap-2">
+                <span
+                  className="inline-flex items-center gap-2 rounded-full
+                           bg-amber-50 text-amber-800 ring-1 ring-amber-200
+                           hover:bg-amber-100/60
+                           dark:bg-amber-500/10 dark:text-amber-200 dark:ring-amber-300/25
+                           dark:hover:bg-amber-400/10 px-3 py-1 text-sm"
+                >
+                  <MapPin className="h-4 w-4" />
+                  15 minutes from CMB Airport
+                </span>
+                <span
+                  className="inline-flex items-center gap-2 rounded-full
+                           bg-amber-50 text-amber-800 ring-1 ring-amber-200
+                           hover:bg-amber-100/60
+                           dark:bg-amber-500/10 dark:text-amber-200 dark:ring-amber-300/25
+                           dark:hover:bg-amber-400/10 px-3 py-1 text-sm"
+                >
+                  <Utensils className="h-4 w-4" />
+                  Finest seafood in town
+                </span>
+                <span
+                  className="inline-flex items-center gap-2 rounded-full
+                           bg-amber-50 text-amber-800 ring-1 ring-amber-200
+                           hover:bg-amber-100/60
+                           dark:bg-amber-500/10 dark:text-amber-200 dark:ring-amber-300/25
+                           dark:hover:bg-amber-400/10 px-3 py-1 text-sm"
+                >
+                  <BedIcon className="h-4 w-4" />
+                  Super-comfortable rooms
+                </span>
+              </div>
+
+              {/* AMENITIES BULLETS: slightly deeper gold on light; lighter on dark */}
+              <ul className="mt-6 space-y-2 text-slate-800 dark:text-white/85 text-sm">
                 <li className="flex items-center gap-2">
-                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-[color:var(--brand,#06b6d4)]"></span>
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-600 dark:bg-amber-400" />
                   Flexible check-in on request
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-[color:var(--brand,#06b6d4)]"></span>
-                  Complimentary Wi-Fi across the property
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-600 dark:bg-amber-400" />
+                  Complimentary high-speed Wi-Fi across the property
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-[color:var(--brand,#06b6d4)]"></span>
-                  Cozy lounge & café
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-600 dark:bg-amber-400" />
+                  Cozy lounge &amp; café
                 </li>
               </ul>
             </Reveal>
+
+            {/* IMAGES: gold hover ring tuned for both themes */}
             <Reveal className="grid grid-cols-2 gap-3">
               {[
                 "https://images.unsplash.com/photo-1551776235-dde6d4829808?q=80&auto=format&fit=crop&w=1200",
@@ -496,9 +557,14 @@ export default function Home() {
               ].map((src, i) => (
                 <SafeImg
                   key={src}
-                  className="rounded-2xl ring-1 ring-slate-900/10 dark:ring-white/10 object-cover aspect-[4/3]"
+                  className="
+              rounded-2xl object-cover aspect-[4/3]
+              ring-1 ring-slate-900/10 dark:ring-white/10
+              transition-transform duration-500 hover:scale-[1.02]
+              hover:ring-amber-400/80 dark:hover:ring-amber-300/70
+            "
                   src={src}
-                  alt={["Reception", "Room", "Breakfast", "Lobby"][i]}
+                  alt={["Reception", "Room", "Breakfast", "Pool"][i]}
                   loading="lazy"
                 />
               ))}
@@ -507,36 +573,45 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SERVICES — equal heights + crisp borders */}
-      <section id="services" className="py-16 lg:py-12">
-        <div className="mx-auto max-w-7xl px-6">
-          <Reveal className="mb-6">
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+      {/* SERVICES — mobile fits one screen; lg+ unchanged */}
+      <section id="services" className="py-0 lg:py-12">
+        <div
+          className="
+      mx-auto max-w-7xl px-6
+      min-h-[calc(100svh-var(--nav-h))] lg:min-h-0  /* MOBILE: fill one screen */
+      grid grid-rows-[auto_1fr]                     /* title + content */
+    "
+        >
+          {/* Title */}
+          <Reveal className="mb-3 lg:mb-6">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
               OUR AWESOME SERVICES
             </h2>
-            <p className="mt-2 text-slate-700 dark:text-white/70">
+            <p className="mt-1 text-sm sm:text-base text-slate-700 dark:text-white/70">
               Check out our awesome services
             </p>
           </Reveal>
 
+          {/* Content */}
           <div
             className="
-              grid items-stretch gap-6
-              lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]
-              lg:max-h-[calc(100svh-12rem)]
-              lg:overflow-visible
-            "
+        row-start-2 min-h-0
+        flex flex-col gap-4
+        lg:grid lg:items-stretch lg:gap-6
+        lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]
+        lg:max-h-[calc(100svh-12rem)] lg:overflow-visible
+      "
           >
-            {/* LEFT */}
+            {/* LEFT (image) */}
             <Reveal className="lg:contents">
               <div
                 ref={leftWrapRef}
                 style={syncedH ? { height: syncedH } : undefined}
                 className="
-                  relative overflow-hidden rounded-3xl ring-1 ring-slate-900/10 dark:ring-white/10
-                  h-[44vh] min-h-[320px]  /* mobile/tablet */
-                  lg:h-auto lg:min-h-0    /* lg+: height controlled by sync */
-                "
+            relative overflow-hidden rounded-3xl ring-1 ring-slate-900/10 dark:ring-white/10
+            h-[42svh] min-h-[240px]   /* MOBILE slice so whole section fits */
+            lg:h-auto lg:min-h-0
+          "
               >
                 <div className="absolute inset-0">
                   {services.map((s, idx) => (
@@ -559,10 +634,10 @@ export default function Home() {
               </div>
             </Reveal>
 
-            {/* RIGHT (observed height source) */}
+            {/* RIGHT (cards) */}
             <div
               ref={rightColRef}
-              className="flex flex-col gap-4 lg:min-h-0 lg:overflow-y-auto lg:px-1"
+              className="flex-1 min-h-0 flex flex-col gap-3 lg:min-h-0 lg:px-1"
             >
               {services.map(({ title, desc, Icon }, i) => {
                 const active = i === activeService;
@@ -574,7 +649,7 @@ export default function Home() {
                       aria-pressed={active}
                       className={[
                         "group w-full text-left rounded-2xl ring-1 ring-inset transition-all",
-                        "px-4 py-4 sm:px-5 sm:py-5",
+                        "px-3 py-3 lg:px-5 lg:py-5", // MOBILE tighter; lg original spacing
                         active
                           ? "bg-cyan-600 text-white ring-cyan-700 shadow-lg shadow-cyan-600/25"
                           : "bg-white dark:bg-white/5 ring-slate-200/80 dark:ring-white/15 hover:bg-slate-50 dark:hover:bg-white/10",
@@ -583,18 +658,18 @@ export default function Home() {
                       <div className="flex items-start gap-3">
                         <span
                           className={[
-                            "mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ring-1 ring-inset",
+                            "mt-0.5 inline-flex h-8 w-8 lg:h-9 lg:w-9 shrink-0 items-center justify-center rounded-xl ring-1 ring-inset",
                             active
                               ? "bg-white/15 ring-white/25"
                               : "bg-amber-50 text-amber-600 ring-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:ring-amber-300/25",
                           ].join(" ")}
                         >
-                          <Icon className="h-5 w-5" />
+                          <Icon className="h-4 w-4 lg:h-5 lg:w-5" />
                         </span>
                         <div>
                           <h3
                             className={[
-                              "text-base sm:text-lg font-semibold",
+                              "text-sm lg:text-lg font-semibold",
                               active
                                 ? "text-white"
                                 : "text-slate-900 dark:text-white",
@@ -604,7 +679,7 @@ export default function Home() {
                           </h3>
                           <p
                             className={[
-                              "mt-1 text-sm leading-relaxed",
+                              "mt-1 text-xs lg:text-sm leading-relaxed",
                               active
                                 ? "text-white/90"
                                 : "text-slate-600 dark:text-white/70",
@@ -644,30 +719,34 @@ export default function Home() {
               Location & Contact
             </h2>
             <p className="mt-2 text-slate-700 dark:text-white/70">
-              Embed your pin and ways to reach us.
+              Find us on the map and get in touch.
             </p>
           </Reveal>
+
           <div className="grid gap-8 lg:grid-cols-2">
+            {/* Map */}
             <Reveal>
               <div className="overflow-hidden rounded-3xl ring-1 ring-slate-900/10 dark:ring-white/10 shadow">
                 <iframe
-                  title="Map"
+                  title="Galaxy – Airport Residence location"
                   className="h-[380px] w-full"
                   loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d8141321.796149648!2d75.7!3d7.85!"
+                  src={MAPS_EMBED_URL}
                 />
               </div>
             </Reveal>
+
+            {/* Contact */}
             <Reveal>
               <h3 className="text-xl font-bold">Address</h3>
               <p className="mt-2 text-slate-700 dark:text-white/80">
-                No. XX, Your Street, Your Town, Sri Lanka
+                No. 433/3, Kimbulapitiya Wattha Kadirana South, Negombo, Sri
+                Lanka
               </p>
               <div className="mt-6 grid gap-3 text-sm text-slate-700 dark:text-white/80">
                 <a
                   className="inline-flex items-center gap-2 rounded-xl px-4 py-3 ring-1 ring-slate-900/10 bg-slate-900/5 hover:bg-slate-900/10 dark:bg-white/10 dark:ring-white/15 dark:hover:bg-white/20"
-                  href="https://maps.google.com"
+                  href={CONTACT.mapsShareUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -675,15 +754,15 @@ export default function Home() {
                 </a>
                 <a
                   className="inline-flex items-center gap-2 rounded-xl px-4 py-3 ring-1 ring-slate-900/10 bg-slate-900/5 hover:bg-slate-900/10 dark:bg-white/10 dark:ring-white/15 dark:hover:bg-white/20"
-                  href="tel:+94XXXXXXXXX"
+                  href={`tel:${CONTACT.phoneE164}`}
                 >
-                  <Phone className="h-5 w-5" /> Call Us
+                  <Phone className="h-5 w-5" /> {CONTACT.phonePretty}
                 </a>
                 <a
                   className="inline-flex items-center gap-2 rounded-xl px-4 py-3 ring-1 ring-slate-900/10 bg-slate-900/5 hover:bg-slate-900/10 dark:bg-white/10 dark:ring-white/15 dark:hover:bg-white/20"
-                  href="mailto:hello@galaxyresidence.lk"
+                  href={`mailto:${CONTACT.email}`}
                 >
-                  <Mail className="h-5 w-5" /> Email
+                  <Mail className="h-5 w-5" /> {CONTACT.email}
                 </a>
               </div>
             </Reveal>

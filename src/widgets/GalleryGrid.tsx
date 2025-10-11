@@ -1,6 +1,29 @@
 // src/widgets/GalleryGrid.tsx
 import { useEffect, useRef, useState } from "react";
 
+/* =========================
+   HEIGHT CONTROLS (edit me)
+   ========================= */
+const TILE_HEIGHT_CLASS =
+   "aspectShort"
+  // "aspectMedium"
+  // "aspectTall"
+  // "fixedShort"
+ // "fixedMedium";
+// "fixedTall"
+
+const CAP_SECTION = false; // true to cap section height with internal scroll
+const SECTION_MAX_VH = 80;
+
+const TILE_HEIGHT_CLASSES: Record<string, string> = {
+  aspectShort: "aspect-[21/9] sm:aspect-[16/9] lg:aspect-[16/9]",
+  aspectMedium: "aspect-[3/2] sm:aspect-[3/2] lg:aspect-[16/10]",
+  aspectTall: "aspect-[4/3] sm:aspect-[4/3] lg:aspect-[4/3]",
+  fixedShort: "h-44 sm:h-52 md:h-60 lg:h-64 xl:h-72",
+  fixedMedium: "h-56 sm:h-64 md:h-72 lg:h-80 xl:h-96",
+  fixedTall: "h-64 sm:h-72 md:h-80 lg:h-[22rem] xl:h-[24rem]",
+};
+
 /** fallback to avoid broken images */
 const FALLBACK =
   "data:image/svg+xml;utf8," +
@@ -135,13 +158,17 @@ export default function GalleryGrid() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  const wrapperCapClass = CAP_SECTION
+    ? `max-h-[${SECTION_MAX_VH}vh] overflow-y-auto pr-1`
+    : "";
+
   return (
     <>
-      {/* GRID */}
-      <div className="grid gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {ALBUMS.map((a, i) => {
-          const isPool = a.title.toLowerCase() === "pool";
-          return (
+      {/* Optional section cap (internal scroll) */}
+      <div className={wrapperCapClass}>
+        {/* GRID */}
+        <div className="grid gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {ALBUMS.map((a, i) => (
             <div
               key={a.title + i}
               className="group relative overflow-hidden rounded-2xl ring-1 ring-slate-900/10 dark:ring-white/10"
@@ -159,7 +186,11 @@ export default function GalleryGrid() {
                   src={a.cover}
                   alt={a.title}
                   onError={(e) => (e.currentTarget.src = FALLBACK)}
-                  className="h-full w-full object-cover aspect-[16/10] sm:aspect-[4/3] transition-transform duration-500 group-hover:scale-[1.03]"
+                  className={[
+                    "w-full object-cover",
+                    TILE_HEIGHT_CLASSES[TILE_HEIGHT_CLASS],
+                    "transition-transform duration-500 group-hover:scale-[1.03]",
+                  ].join(" ")}
                   loading={i === 0 ? "eager" : "lazy"}
                   decoding="async"
                   referrerPolicy="no-referrer"
@@ -169,34 +200,23 @@ export default function GalleryGrid() {
                 {/* darken slightly on hover for contrast */}
                 <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/25" />
 
-                {/* SPECIAL: centered white pill only for Pool */}
-                {isPool && (
-                  <span
-                    className="
-                      pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-                      rounded-full bg-white px-3 py-1 text-sm font-semibold text-slate-900
-                      ring-1 ring-black/5 shadow
-                      opacity-0 translate-y-1 transition-all duration-200
-                      group-hover:opacity-100 group-hover:translate-y-0
-                      group-focus-within:opacity-100 group-focus-within:translate-y-0
-                    "
-                  >
-                    Pool
-                  </span>
-                )}
-
-                {/* title chip (bottom-left) for all EXCEPT Pool */}
-                {!isPool && (
-                  <div className="pointer-events-none absolute bottom-3 left-3 right-3 translate-y-1 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0">
-                    <span className="inline-flex max-w-full items-center rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-slate-900 ring-1 ring-black/10 dark:bg-black/60 dark:text-white dark:ring-white/10">
-                      {a.title}
-                    </span>
-                  </div>
-                )}
+                {/* CENTERED WHITE PILL ON HOVER — now for ALL albums */}
+                <span
+                  className="
+                    pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+                    rounded-full bg-white px-4 py-1.5 text-lg font-semibold text-slate-900
+                    ring-1 ring-black/5 shadow
+                    opacity-0 translate-y-1 transition-all duration-200
+                    group-hover:opacity-100 group-hover:translate-y-0
+                    group-focus-within:opacity-100 group-focus-within:translate-y-0
+                  "
+                >
+                  {a.title}
+                </span>
               </button>
             </div>
-          );
-        })}
+          ))}
+        </div>
       </div>
 
       {/* LIGHTBOX (album with multiple images) */}
